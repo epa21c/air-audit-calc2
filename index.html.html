@@ -1,0 +1,181 @@
+<div style="font-family: 'Noto Sans KR', sans-serif; max-width: 650px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #ffffff;">
+  <h2 style="text-align: center; color: #1a365d; margin-bottom: 25px;">에어오딧(Air Audit) 예상 절감액 진단기</h2>
+  
+  <h3 style="font-size: 16px; color: #2b6cb0; border-bottom: 2px solid #ebf8ff; padding-bottom: 8px; margin-bottom: 15px;">기본 가동 정보</h3>
+  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">콤프레샤 용량 (kW)</label>
+      <input type="number" id="comp_kw" value="100" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">전력 단가 (원/kWh)</label>
+      <input type="number" id="elec_rate" value="150" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">하루 평균 가동시간 (시간/일)</label>
+      <input type="number" id="daily_hours" value="24" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">연간 가동 일수 (일/년)</label>
+      <input type="number" id="yearly_days" value="300" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+  </div>
+
+  <h3 style="font-size: 16px; color: #2b6cb0; border-bottom: 2px solid #ebf8ff; padding-bottom: 8px; margin-bottom: 15px;">유틸리티 설비 정보</h3>
+  
+  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">리시버 탱크 유무</label>
+      <select id="tank_exist" onchange="toggleInput('tank')" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box; background-color: #fff;">
+        <option value="Y">설치됨</option>
+        <option value="N">미설치</option>
+      </select>
+    </div>
+    <div style="flex: 1;" id="tank_cap_wrap">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">탱크 용량 (㎥)</label>
+      <input type="number" id="tank_cap" value="1.0" step="0.1" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+    <div style="flex: 1;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">드라이어 유무</label>
+      <select id="dryer_exist" onchange="toggleInput('dryer')" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box; background-color: #fff;">
+        <option value="Y">설치됨</option>
+        <option value="N">미설치</option>
+      </select>
+    </div>
+    <div style="flex: 1;" id="dryer_cap_wrap">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">드라이어 용량 (㎥/min)</label>
+      <input type="number" id="dryer_cap" value="20" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box;">
+    </div>
+  </div>
+
+  <h3 style="font-size: 16px; color: #2b6cb0; border-bottom: 2px solid #ebf8ff; padding-bottom: 8px; margin-bottom: 15px;">진단 및 솔루션</h3>
+  <div style="margin-bottom: 15px;">
+    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">시스템 개선 솔루션 선택</label>
+    <select id="solution_type" onchange="updateBaseSavingRate()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box; background-color: #fff;">
+      <option value="15">기본 에어오딧 (누설 차단 및 압력 최적화) - 기본 15% 절감</option>
+      <option value="35">VSD (인버터) 콤프레샤 도입 - 기본 35% 절감</option>
+    </select>
+  </div>
+
+  <div style="margin-bottom: 25px;">
+    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748; font-size: 14px;">기본 솔루션 절감률 (%)</label>
+    <input type="number" id="base_save_rate" value="15" readonly style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; box-sizing: border-box; background-color: #f7fafc; color: #718096;">
+  </div>
+  
+  <button onclick="calculateSavings()" style="width: 100%; padding: 15px; background-color: #3182ce; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s;">에너지 절감액 진단하기</button>
+  
+  <div id="result_box" style="margin-top: 25px; padding: 20px; background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 5px; display: none;">
+    <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+      <span style="color: #2c5282; font-size: 15px;">현재 연간 총 전력비:</span>
+      <span><strong id="total_cost" style="font-size: 18px; color: #2c5282;">0</strong> <span style="color: #2c5282;">원</span></span>
+    </div>
+    
+    <div style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-radius: 5px; border-left: 4px solid #f6ad55;">
+      <p style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold; color: #dd6b20;">설비 추가 개선 진단 내용:</p>
+      <ul id="audit_details" style="margin: 0; padding-left: 20px; font-size: 13px; color: #4a5568; line-height: 1.5;">
+        </ul>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #bee3f8; padding-top: 15px;">
+      <span style="color: #c53030; font-size: 18px; font-weight: bold;">최종 예상 연간 절감액:</span>
+      <span><strong id="save_cost" style="font-size: 26px; color: #c53030;">0</strong> <span style="color: #c53030; font-weight: bold;">원</span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// 유무 선택에 따라 용량 입력칸 활성화/비활성화
+function toggleInput(type) {
+  const exist = document.getElementById(type + '_exist').value;
+  const wrap = document.getElementById(type + '_cap_wrap');
+  if (exist === 'Y') {
+    wrap.style.opacity = '1';
+    document.getElementById(type + '_cap').disabled = false;
+  } else {
+    wrap.style.opacity = '0.4';
+    document.getElementById(type + '_cap').disabled = true;
+  }
+}
+
+// 솔루션 변경 시 기본 절감률 업데이트
+function updateBaseSavingRate() {
+  document.getElementById('base_save_rate').value = document.getElementById('solution_type').value;
+}
+
+// 최종 계산
+function calculateSavings() {
+  const kw = parseFloat(document.getElementById('comp_kw').value);
+  const dailyHours = parseFloat(document.getElementById('daily_hours').value);
+  const yearlyDays = parseFloat(document.getElementById('yearly_days').value);
+  const rate = parseFloat(document.getElementById('elec_rate').value);
+  let baseSaveRate = parseFloat(document.getElementById('base_save_rate').value);
+  
+  const tankExist = document.getElementById('tank_exist').value;
+  const dryerExist = document.getElementById('dryer_exist').value;
+  
+  if (isNaN(kw) || isNaN(dailyHours) || isNaN(yearlyDays) || isNaN(rate)) {
+    alert('기본 정보에 정확한 숫자를 입력해 주세요.');
+    return;
+  }
+  
+  let additionalSaveRate = 0;
+  let auditMsgs = [];
+  
+  // 리시버 탱크 진단 로직
+  if (tankExist === 'N') {
+    additionalSaveRate += 5;
+    auditMsgs.push('리시버 탱크 미설치: 공회전 최소화를 위한 탱크 설치 (예상 5% 추가 절감)');
+  } else {
+    const tankCap = parseFloat(document.getElementById('tank_cap').value);
+    // 권장 탱크 용량이 콤프레샤 용량(kW)의 대략 0.015배(15L/kW) 미만일 경우 부족으로 판정
+    if (!isNaN(tankCap) && tankCap < kw * 0.015) {
+      additionalSaveRate += 2;
+      auditMsgs.push('리시버 탱크 용량 부족: 부하 변동 대응을 위한 용량 증설 (예상 2% 추가 절감)');
+    } else {
+      auditMsgs.push('리시버 탱크 용량 적정: 적정 차압 유지 중');
+    }
+  }
+
+  // 드라이어 진단 로직
+  if (dryerExist === 'N') {
+    additionalSaveRate += 3;
+    auditMsgs.push('드라이어 미설치: 수분 제거 및 고효율 에어 품질 관리 (예상 3% 추가 절감)');
+  } else {
+    const dryerCap = parseFloat(document.getElementById('dryer_cap').value);
+    // 콤프레샤 유량 대비 드라이어 용량 부족 시 (대략 100kW가 15~20㎥/min 생산)
+    if (!isNaN(dryerCap) && dryerCap < kw * 0.15) {
+      additionalSaveRate += 2;
+      auditMsgs.push('드라이어 용량 부족: 압력 손실(차압) 개선을 위한 고효율 교체 (예상 2% 추가 절감)');
+    } else {
+      auditMsgs.push('드라이어 용량 적정: 원활한 에어 흐름 유지 중');
+    }
+  }
+
+  // 총 전력비 계산
+  const totalCost = kw * dailyHours * yearlyDays * rate;
+  
+  // 최종 절감액 = (기본 절감률 + 설비 추가 절감률) 반영
+  const finalSaveRate = baseSaveRate + additionalSaveRate;
+  const saveCost = totalCost * (finalSaveRate / 100);
+  
+  // 결과 화면 렌더링
+  document.getElementById('total_cost').innerText = Math.round(totalCost).toLocaleString();
+  document.getElementById('save_cost').innerText = Math.round(saveCost).toLocaleString();
+  
+  const ul = document.getElementById('audit_details');
+  ul.innerHTML = '';
+  auditMsgs.forEach(msg => {
+    const li = document.createElement('li');
+    li.innerText = msg;
+    ul.appendChild(li);
+  });
+  
+  document.getElementById('result_box').style.display = 'block';
+}
+</script>
